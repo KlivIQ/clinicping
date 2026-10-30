@@ -10,33 +10,118 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ClinicRouteImport } from './routes/_clinic'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ClinicAddRouteImport } from './routes/_clinic/add'
+import { Route as ClinicCalendarRouteImport } from './routes/_clinic/calendar'
+import { Route as ClinicRemindersRouteImport } from './routes/_clinic/reminders'
+import { Route as ClinicSettingsRouteImport } from './routes/_clinic/settings'
+import { Route as ClinicTodayRouteImport } from './routes/_clinic/today'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClinicRoute = ClinicRouteImport.update({
+  id: '/_clinic',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClinicAddRoute = ClinicAddRouteImport.update({
+  id: '/add',
+  path: '/add',
+  getParentRoute: () => ClinicRoute,
+} as any)
+const ClinicCalendarRoute = ClinicCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => ClinicRoute,
+} as any)
+const ClinicRemindersRoute = ClinicRemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
+  getParentRoute: () => ClinicRoute,
+} as any)
+const ClinicSettingsRoute = ClinicSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ClinicRoute,
+} as any)
+const ClinicTodayRoute = ClinicTodayRouteImport.update({
+  id: '/today',
+  path: '/today',
+  getParentRoute: () => ClinicRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/add': typeof ClinicAddRoute
+  '/calendar': typeof ClinicCalendarRoute
+  '/reminders': typeof ClinicRemindersRoute
+  '/settings': typeof ClinicSettingsRoute
+  '/today': typeof ClinicTodayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/add': typeof ClinicAddRoute
+  '/calendar': typeof ClinicCalendarRoute
+  '/reminders': typeof ClinicRemindersRoute
+  '/settings': typeof ClinicSettingsRoute
+  '/today': typeof ClinicTodayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_clinic': typeof ClinicRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_clinic/add': typeof ClinicAddRoute
+  '/_clinic/calendar': typeof ClinicCalendarRoute
+  '/_clinic/reminders': typeof ClinicRemindersRoute
+  '/_clinic/settings': typeof ClinicSettingsRoute
+  '/_clinic/today': typeof ClinicTodayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/add'
+    | '/calendar'
+    | '/reminders'
+    | '/settings'
+    | '/today'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/add'
+    | '/calendar'
+    | '/reminders'
+    | '/settings'
+    | '/today'
+  id:
+    | '__root__'
+    | '/'
+    | '/_clinic'
+    | '/login'
+    | '/_clinic/add'
+    | '/_clinic/calendar'
+    | '/_clinic/reminders'
+    | '/_clinic/settings'
+    | '/_clinic/today'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ClinicRoute: typeof ClinicRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +133,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_clinic': {
+      id: '/_clinic'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ClinicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_clinic/add': {
+      id: '/_clinic/add'
+      path: '/add'
+      fullPath: '/add'
+      preLoaderRoute: typeof ClinicAddRouteImport
+      parentRoute: typeof ClinicRoute
+    }
+    '/_clinic/calendar': {
+      id: '/_clinic/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof ClinicCalendarRouteImport
+      parentRoute: typeof ClinicRoute
+    }
+    '/_clinic/reminders': {
+      id: '/_clinic/reminders'
+      path: '/reminders'
+      fullPath: '/reminders'
+      preLoaderRoute: typeof ClinicRemindersRouteImport
+      parentRoute: typeof ClinicRoute
+    }
+    '/_clinic/settings': {
+      id: '/_clinic/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof ClinicSettingsRouteImport
+      parentRoute: typeof ClinicRoute
+    }
+    '/_clinic/today': {
+      id: '/_clinic/today'
+      path: '/today'
+      fullPath: '/today'
+      preLoaderRoute: typeof ClinicTodayRouteImport
+      parentRoute: typeof ClinicRoute
+    }
   }
 }
 
+interface ClinicRouteChildren {
+  ClinicAddRoute: typeof ClinicAddRoute
+  ClinicCalendarRoute: typeof ClinicCalendarRoute
+  ClinicRemindersRoute: typeof ClinicRemindersRoute
+  ClinicSettingsRoute: typeof ClinicSettingsRoute
+  ClinicTodayRoute: typeof ClinicTodayRoute
+}
+
+const ClinicRouteChildren: ClinicRouteChildren = {
+  ClinicAddRoute: ClinicAddRoute,
+  ClinicCalendarRoute: ClinicCalendarRoute,
+  ClinicRemindersRoute: ClinicRemindersRoute,
+  ClinicSettingsRoute: ClinicSettingsRoute,
+  ClinicTodayRoute: ClinicTodayRoute,
+}
+
+const ClinicRouteWithChildren =
+  ClinicRoute._addFileChildren(ClinicRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ClinicRoute: ClinicRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
