@@ -8,6 +8,10 @@ import { Logo } from "@/components/brand/Logo";
 import { Credit, LangToggle } from "@/components/LangToggle";
 import { useI18n } from "@/lib/i18n";
 import { DEMO_OTP, DEMO_PHONE } from "@/lib/mock-data";
+import { ArrowUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { LandingPreview } from "@/components/LandingPreview";
+import clinicReception from "@/assets/clinic-reception.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,59 +30,54 @@ export const Route = createFileRoute("/")({
 function Landing() {
   const { t } = useI18n();
   const features = [
-    { icon: CalendarClock, t: t("landing.f1.t"), d: t("landing.f1.d") },
-    { icon: PhoneCall, t: t("landing.f2.t"), d: t("landing.f2.d") },
-    { icon: MessageSquareText, t: t("landing.f3.t"), d: t("landing.f3.d") },
+    { icon: CalendarClock, t: t("landing.benefit1"), d: t("landing.benefit1Sub") },
+    { icon: PhoneCall, t: t("landing.benefit2"), d: t("landing.benefit2Sub") },
+    { icon: MessageSquareText, t: t("landing.benefit3"), d: t("landing.benefit3Sub") },
   ];
   return (
-    <div className="mx-auto flex min-h-screen max-w-md flex-col px-5">
-      <header className="flex items-center justify-between py-4">
+    <div className="landing-page min-h-screen">
+      <header className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-4 sm:px-8">
         <Logo />
         <LangToggle />
       </header>
 
-      <main className="flex-1 pt-8">
-        <p className="text-sm font-medium text-muted-foreground">{t("brand.tagline")}</p>
-        <h1 className="mt-3 text-4xl font-semibold leading-tight">{t("landing.headline")}</h1>
-        <p className="mt-4 text-lg leading-relaxed text-muted-foreground">{t("landing.sub")}</p>
-
-        {/* Preview of a Today row */}
-        <div className="mt-8 rounded-2xl border border-border bg-card p-4">
-          <div className="flex items-center gap-3">
-            <span className="w-14 text-sm font-semibold tabular-nums">9:30</span>
-            <div className="flex-1">
-              <p className="font-semibold">Arjun Mehta</p>
-              <p className="text-sm text-risk-high">▲ {t("risk.firstVisitOld")}</p>
+      <main>
+        <section className="landing-hero relative isolate overflow-hidden border-y border-border">
+          <img src={clinicReception} alt="" width={1536} height={768} fetchPriority="high" className="landing-hero-photo absolute inset-0 -z-20 h-full w-full object-cover" />
+          <div className="landing-hero-veil absolute inset-0 -z-10" />
+          <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
+            <div className="max-w-lg">
+              <p className="text-sm font-medium text-muted-foreground">{t("landing.intro")}</p>
+              <h1 className="mt-3 text-5xl font-semibold leading-tight sm:text-6xl">ClinicPing</h1>
+              <p className="mt-4 max-w-sm font-display text-2xl font-medium leading-snug sm:text-3xl">{t("landing.headline")}</p>
+              <p className="mt-4 max-w-sm text-base leading-relaxed text-muted-foreground">{t("landing.simpleSub")}</p>
+              <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+                <Button asChild className="min-h-12 rounded-full px-6 text-base shadow-none"><Link to="/login">{t("landing.cta")}<ArrowUpRight aria-hidden="true" /></Link></Button>
+                <Button asChild variant="link" className="h-auto min-h-12 whitespace-normal px-0"><Link to="/login">{t("landing.login")}</Link></Button>
+              </div>
             </div>
-            <span className="rounded-full bg-peach px-3 py-1.5 text-sm font-medium text-accent-foreground">{t("call")}</span>
           </div>
-        </div>
-
-        <ul className="mt-10 space-y-6">
+        </section>
+        <LandingPreview />
+        <ul className="mx-auto grid max-w-5xl gap-7 border-t border-border px-5 py-9 sm:grid-cols-3 sm:px-8">
           {features.map((f) => (
-            <li key={f.t} className="flex gap-4">
+            <li key={f.t} className="flex gap-3 sm:flex-col">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-peach-soft">
-                <f.icon className="h-5 w-5" />
+                <f.icon className="h-5 w-5" aria-hidden="true" />
               </span>
               <div>
                 <h2 className="text-lg font-semibold">{f.t}</h2>
-                <p className="text-muted-foreground">{f.d}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.d}</p>
               </div>
             </li>
           ))}
         </ul>
       </main>
 
-      <div className="sticky bottom-0 space-y-2 bg-background pb-2 pt-6">
-        <Link to="/login" className="flex min-h-14 items-center justify-center rounded-full bg-primary text-lg font-semibold text-primary-foreground">
-          {t("landing.cta")}
-        </Link>
-        <Link to="/login" className="flex min-h-12 items-center justify-center rounded-full font-medium text-primary underline-offset-4 hover:underline">
-          {t("landing.login")}
-        </Link>
+      <footer className="border-t border-border px-5 pt-5">
         <p className="text-center text-xs text-muted-foreground">{t("landing.demo", { phone: DEMO_PHONE, otp: DEMO_OTP })}</p>
-      </div>
-      <Credit />
+        <Credit />
+      </footer>
     </div>
   );
 }
