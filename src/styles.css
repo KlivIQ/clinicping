@@ -1,3 +1,4 @@
+/* ClinicPing — © 2026 KlivIQ Technologies. Built by KlivIQ Technologies. */
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -115,6 +116,28 @@
   --sidebar-accent-foreground: var(--inkberry);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--inkberry);
+  --landing-veil: color-mix(in oklab, var(--background) 88%, transparent);
+}
+
+.landing-page h1, .landing-page h2, .landing-page h3 { letter-spacing: 0; }
+.landing-hero-veil { background: var(--landing-veil); }
+.landing-hero-photo { object-position: 70% center; }
+.landing-page header button { min-height: 48px; }
+.preview-time { animation: preview-arrive 250ms ease-out both; }
+.preview-message { animation: preview-arrive 450ms ease-out both; }
+@keyframes preview-arrive {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (min-width: 768px) {
+  .landing-hero-veil { width: 57%; background: var(--landing-veil); }
+  .landing-hero-photo { object-position: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-page *, .landing-page *::before, .landing-page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 @layer base {

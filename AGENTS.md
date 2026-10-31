@@ -16,3 +16,4 @@
 - All UI copy goes through `src/lib/i18n.tsx` (English + Tamil); never hardcode user-facing strings.
 - Signed-in screens live under the `_clinic` pathless layout, which owns the bottom tabs and the session guard.
 - Every source file starts with the KlivIQ Technologies copyright/credit header.
+- Keep the landing-page simulation isolated from clinic data and messaging; preview interactions must never send patient messages.
