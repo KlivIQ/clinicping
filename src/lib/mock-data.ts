@@ -5,6 +5,10 @@
  * Seed data for a fictional Chennai practice. Replace with backend queries later.
  */
 import type { Appointment, Doctor, Patient, Practice, Reminder, WorkingHours } from "./models";
+export { useClinicDemo } from './clinic-demo-context';
+export function createClinicDemoState() {
+  return { appointments: appointments.map(a => ({ ...a })), patients: patients.map(p => ({ ...p })), reminders: reminders.map(r => ({ ...r })), consultationId: null, delayMinutes: 0 };
+}
 
 export const DEMO_PHONE = "9840012345";
 export const DEMO_OTP = "123456";

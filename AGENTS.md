@@ -17,3 +17,5 @@
 - Signed-in screens live under the `_clinic` pathless layout, which owns the bottom tabs and the session guard.
 - Every source file starts with the KlivIQ Technologies copyright/credit header.
 - Keep the landing-page simulation isolated from clinic data and messaging; preview interactions must never send patient messages.
+- Phase 2 uses a shared in-memory clinic provider scoped to the signed-in layout, exposed through mock-data; navigation retains demo changes while reload resets them, without real messaging or storage.
+- Keep scheduling and queue transitions in browser-safe pure functions so conflicts, consultation exclusivity, and delay behavior can be tested independently of screens.

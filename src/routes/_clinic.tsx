@@ -9,6 +9,9 @@ import { useEffect, useState } from "react";
 import { CalendarDays, Home, Plus, BellRing, Settings } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { getSession } from "@/lib/session";
+import { ClinicDemoProvider } from '@/lib/clinic-demo-context';
+import { createClinicDemoState } from '@/lib/mock-data';
+import { Credit } from '@/components/LangToggle';
 
 export const Route = createFileRoute("/_clinic")({ component: ClinicLayout });
 
@@ -16,6 +19,7 @@ function ClinicLayout() {
   const { t } = useI18n();
   const nav = useNavigate();
   const [ok, setOk] = useState(false);
+  const [initialState] = useState(createClinicDemoState);
   useEffect(() => {
     if (!getSession()) nav({ to: "/login" });
     else setOk(true);
@@ -32,7 +36,10 @@ function ClinicLayout() {
 
   return (
     <div className="mx-auto min-h-screen max-w-md pb-24">
-      <Outlet />
+      <ClinicDemoProvider initialState={initialState}>
+        <main><Outlet /></main>
+        <Credit />
+      </ClinicDemoProvider>
       <nav className="fixed inset-x-0 bottom-0 border-t border-border bg-card">
         <ul className="mx-auto grid max-w-md grid-cols-5">
           {tabs.map((tab) => (
