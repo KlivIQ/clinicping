@@ -4,6 +4,7 @@
  */
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Lang } from "./models";
+import { phase2En, phase2Ta } from "./phase2-copy";
 
 const en = {
   "brand.tagline": "Your clinic day, on one screen.",
@@ -92,6 +93,7 @@ const en = {
   "landing.benefit2Sub": "See who may miss their visit and who to call first.",
   "landing.benefit3": "Patients kept in the loop",
   "landing.benefit3Sub": "Appointment updates in the language they read.",
+  ...phase2En,
 };
 type Key = keyof typeof en;
 
@@ -182,6 +184,7 @@ const ta: Record<Key, string> = {
   "landing.benefit2Sub": "யார் வராமல் போகலாம், யாரை முதலில் அழைக்கலாம் என அறியுங்கள்.",
   "landing.benefit3": "நோயாளிகளுக்குத் தகவல்",
   "landing.benefit3Sub": "அவர்கள் படிக்கும் மொழியில் சந்திப்புத் தகவல்கள்.",
+  ...phase2Ta,
 };
 
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (k: Key, vars?: Record<string, string>) => string };
