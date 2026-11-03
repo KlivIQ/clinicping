@@ -33,4 +33,37 @@ export function applyDelay(state: DemoState, minutes: number, date: string): Dem
   const shifted = state.appointments.map(a => ids.has(a.id) ? { ...a, startsAt: new Date(new Date(a.startsAt).getTime() + minutes * 60000).toISOString() } : a);
   const now = new Date().toISOString();
   return { ...state, appointments: shifted, delayMinutes: state.delayMinutes + minutes, reminders: [...state.reminders, ...shifted.filter(a => ids.has(a.id)).map(a => ({ id: crypto.randomUUID(), appointmentId: a.id, channel: 'whatsapp' as const, lang: state.patients.find(p => p.id === a.patientId)?.preferredLang ?? 'en', state: 'delivered' as const, isManual: true, sentAt: now, updatedAt: now, kind: 'delay' as const, previewTime: a.startsAt }))] };
+}export function reschedule(state: DemoState, id: string, startsAt: string): DemoState {
+  const a = state.appointments.find(x => x.id === id);
+  if (!a || hasConflict(state.appointments, startsAt, a.durationMinutes, id)) return state;
+  return { ...state, appointments: state.appointments.map(x => x.id === id ? { ...x, startsAt } : x) };
+}
+export type NewAppointment = { patientId?: string; name: string; phone: string; lang: 'en' | 'ta'; startsAt: string; feeInr: number };
+export function validateNew(state: DemoState, n: NewAppointment): 'invalid' | 'duplicate' | 'conflict' | null {
+  const phone = n.phone.replace(/\D/g, '');
+  if (!n.patientId && (!n.name.trim() || !/^[6-9]\d{9}$/.test(phone))) return 'invalid';
+  if (!Number.isInteger(n.feeInr) || n.feeInr < 0) return 'invalid';
+  if (!n.patientId && state.patients.some(p => p.phone === `+91${phone}`)) return 'duplicate';
+  if (hasConflict(state.appointments, n.startsAt, 15)) return 'conflict';
+  return null;
+}
+export function addAppointment(state: DemoState, n: NewAppointment): DemoState {
+  if (validateNew(state, n)) return state;
+  const now = new Date().toISOString();
+  let patients = state.patients, patientId = n.patientId;
+  if (!patientId) {
+    patientId = `pat_${crypto.randomUUID()}`;
+    patients = [...patients, { id: patientId, practiceId: 'prc_1', fullName: n.name.trim(), phone: `+91${n.phone.replace(/\D/g, '')}`, preferredLang: n.lang, visitCount: 0, noShowCount: 0, createdAt: now }];
+  }
+  const appt: Appointment = { id: `apt_${crypto.randomUUID()}`, practiceId: 'prc_1', patientId, startsAt: n.startsAt, durationMinutes: 15, source: 'manual', status: 'booked', riskLevel: 'low', riskReasonKey: 'risk.regular', feeInr: n.feeInr, bookedAt: now };
+  return { ...state, patients, appointments: [...state.appointments, appt] };
+}
+export function addReminder(state: DemoState, appointmentId: string): DemoState {
+  const a = state.appointments.find(x => x.id === appointmentId); if (!a) return state;
+  const now = new Date().toISOString();
+  const lang = state.patients.find(p => p.id === a.patientId)?.preferredLang ?? 'en';
+  return { ...state, reminders: [...state.reminders, { id: crypto.randomUUID(), appointmentId, channel: 'whatsapp', lang, state: 'delivered', isManual: true, sentAt: now, updatedAt: now, kind: 'appointment', previewTime: a.startsAt }] };
+}
+export function setReminderState(state: DemoState, id: string, s: Reminder['state']): DemoState {
+  return { ...state, reminders: state.reminders.map(r => r.id === id ? { ...r, state: s, updatedAt: new Date().toISOString() } : r) };
 }
