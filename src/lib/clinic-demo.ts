@@ -38,7 +38,7 @@ export function applyDelay(state: DemoState, minutes: number, date: string): Dem
   if (!a || hasConflict(state.appointments, startsAt, a.durationMinutes, id)) return state;
   return { ...state, appointments: state.appointments.map(x => x.id === id ? { ...x, startsAt } : x) };
 }
-export type NewAppointment = { patientId?: string; name: string; phone: string; lang: 'en' | 'ta'; startsAt: string; feeInr: number };
+export type NewAppointment = { patientId?: string | undefined; name: string; phone: string; lang: 'en' | 'ta'; startsAt: string; feeInr: number };
 export function validateNew(state: DemoState, n: NewAppointment): 'invalid' | 'duplicate' | 'conflict' | null {
   const phone = n.phone.replace(/\D/g, '');
   if (!n.patientId && (!n.name.trim() || !/^[6-9]\d{9}$/.test(phone))) return 'invalid';
