@@ -52,7 +52,7 @@ function Calendar() {
       <div className="space-y-5 px-5">
         <div className="flex items-center justify-between">
           <button aria-label={t("calendar.prev")} onClick={() => setOffset(offset - 1)} className="flex h-12 w-12 items-center justify-center rounded-full border border-border"><ChevronLeft className="h-5 w-5" /></button>
-          <p className="font-medium">{t("calendar.week", { date: week[0].toLocaleDateString(loc, { day: "numeric", month: "short" }) })}</p>
+          <p className="font-medium">{t("calendar.week", { date: week[0]!.toLocaleDateString(loc, { day: "numeric", month: "short" }) })}</p>
           <button aria-label={t("calendar.next")} onClick={() => setOffset(offset + 1)} className="flex h-12 w-12 items-center justify-center rounded-full border border-border"><ChevronRight className="h-5 w-5" /></button>
         </div>
         <div className="grid grid-cols-7 gap-1">
