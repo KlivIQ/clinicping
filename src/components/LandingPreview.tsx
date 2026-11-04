@@ -26,7 +26,13 @@ export function LandingPreview() {
           <p className="text-xs font-medium uppercase tracking-normal text-muted-foreground">{t("landing.previewLabel")}</p>
           <h2 id="preview-title" className="mt-2 text-2xl font-semibold">{t("landing.preview")}</h2>
         </div>
-        <Button variant="outline" role="switch" aria-checked={delayed} onClick={() => setDelayed(!delayed)} className="h-auto min-h-12 max-w-full gap-3 rounded-full border-border bg-card px-4 py-3 text-left whitespace-normal shadow-none">
+        <div className="flex flex-col items-end gap-1.5">
+        {!tried && (
+          <span className="delay-hint-arrow inline-flex items-center gap-1 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground" aria-hidden="true">
+            {t("landing.tryIt")} <ArrowDown className="h-3.5 w-3.5" />
+          </span>
+        )}
+        <Button variant="outline" role="switch" aria-checked={delayed} onClick={() => { setDelayed(!delayed); setTried(true); }} className={cn("delay-cta", !tried && "delay-cta-ring", "h-auto min-h-12 max-w-full gap-3 rounded-full border-border bg-card px-4 py-3 text-left whitespace-normal shadow-none">
           <Clock3 aria-hidden="true" />
           <span className="flex-1">{t("landing.delay")}</span>
           <span aria-hidden="true" className={cn("relative h-6 w-10 shrink-0 rounded-full transition-colors", delayed ? "bg-primary" : "bg-muted")}>
