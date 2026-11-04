@@ -129,6 +129,20 @@
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+.delay-cta { position: relative; }
+.delay-cta-ring::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 9999px;
+  border: 2px solid var(--peach, #FFB59A); animation: delay-pulse 1.8s ease-out infinite; pointer-events: none;
+}
+.delay-hint-arrow { animation: delay-nudge 1.2s ease-in-out infinite; }
+@keyframes delay-pulse {
+  0% { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.12); }
+}
+@keyframes delay-nudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
 @media (min-width: 768px) {
   .landing-hero-veil { width: 57%; background: var(--landing-veil); }
   .landing-hero-photo { object-position: center; }
