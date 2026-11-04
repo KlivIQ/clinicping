@@ -1,38 +1,82 @@
-# Clinicping
+# ClinicPing
 
-Build ClinicPing, a mobile-first web app for Indian doctors and small clinics, following the attached UI specifications.
+**Fewer empty chairs. Calmer days.** ClinicPing is a mobile-first web app that helps Indian doctors and small clinics run a calm daily queue, keep patients informed about delays, and reduce no-shows with timely reminders — in English and Tamil.
 
-Logo direction: The Paired Rhythm (Two Slots) — Two vertical pill-shaped slot markers in Inkberry (#2A1E4A); the left one is slotted and solid, while the right one receives an incoming warm Peach (#FFB59A) circular node.
+Built by **KlivIQ Technologies**.
 
-Implement in phases: First logo and landing page + login and onboarding flow. Keep placeholders for everything (Today dashboard, Calendar, Quick Add, Reminders, Settings). We will connect db later, but implement all the required db schema and mock data models so a real backend can plug in seamlessly. Add UI-level sample login for testing and demo.
+---
 
-Brand details from spec:
-- Name: ClinicPing
-- Palette: Inkberry #2A1E4A (primary, text, key surfaces) and Peach #FFB59A (accent, fills with Inkberry text on top). Canvas Warm #FAF8F5 background with neutral scale. Color-blind-safe risk states (High, Medium, Low).
-- Typography: Fraunces for headings, Figtree for body; Noto Serif Tamil and Noto Sans Tamil for Tamil text.
-- Language toggle: English and Tamil throughout.
-- Minimum 48px tap targets, thumb-friendly navigation.
-- Credit: "Built by KlivIQ Technologies" in footer and code header comments.
+## Features
 
-This project was built with [Lovable](https://lovable.dev).
+- **Landing page** with an interactive "Doctor running 15 min late" simulation showing how the queue and patient message update.
+- **Demo sign-in & onboarding** — phone number + OTP flow (demo: `9840012345` / OTP `123456`).
+- **Today** — live queue: arrive, start consultation (one at a time), complete, no-show, cancel, and a cascading 15-minute delay.
+- **Calendar** — weekly view of booked and free slots with rescheduling.
+- **Quick Add** — new appointments with validation and conflict prevention.
+- **Reminders** — simulated reminder log with English/Tamil previews, retry and confirmation (no real messages are sent).
+- **Settings** — clinic profile and language preferences.
+- **Bilingual** — every screen in English and தமிழ்.
 
-**Live app**: https://clinicping.lovable.app
+## Brand system
 
-## Build with Lovable
+| Token | Value | Use |
+| --- | --- | --- |
+| Inkberry | `#2A1E4A` | Primary, text, key surfaces |
+| Peach | `#FFB59A` | Accent fills (Inkberry text on top) |
+| Canvas Warm | `#FAF8F5` | Background |
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/34887071-ac97-409e-b249-c192666246a3).
+- Type: Fraunces (headings), Figtree (body), Noto Serif / Noto Sans Tamil.
+- Risk states (High / Medium / Low) are colour-blind-safe and always paired with an icon and label.
+- Logo: *Paired Rhythm* — two slot pills, a peach node arriving in the right slot.
+- 48px minimum tap targets, bottom tab navigation.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+## Tech stack
 
-## Development
+- TanStack Start v1 (React 19, file-based routing, SSR)
+- Vite 7, TypeScript
+- Tailwind CSS v4 + shadcn/ui
+- Vitest + Testing Library
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+## Project structure
+
+```
+src/
+  components/        UI and brand components
+  lib/models.ts      Domain types (mirror supabase/schema.sql)
+  lib/mock-data.ts   Data access layer used by the UI
+  lib/clinic-demo.ts Pure queue & scheduling rules (tested)
+  lib/i18n.tsx       English + Tamil copy
+  routes/            Pages (signed-in screens under _clinic/)
+supabase/schema.sql  Database schema ready for a real backend
+```
+
+The UI reads only from `mock-data.ts`, so a real backend can replace the in-memory demo without UI changes. Demo changes reset on reload.
+
+## Getting started
+
+Requires Node.js 20+ (or Bun).
 
 ```sh
 git clone <this-repository-url>
-cd <repository-name>
-npm i
+cd clinicping
+npm install
 npm run dev
 ```
+
+Other scripts:
+
+```sh
+npm run build   # production build
+npm test        # run tests
+npm run lint    # lint
+```
+
+## Roadmap
+
+- Real phone OTP authentication
+- Persistent database
+- Live WhatsApp / SMS reminders and delay notifications
+
+## License
+
+© 2026 KlivIQ Technologies. All rights reserved.

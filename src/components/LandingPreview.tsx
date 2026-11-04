@@ -3,7 +3,7 @@
  * Built by KlivIQ Technologies.
  */
 import { useState } from "react";
-import { ArrowRight, Check, CheckCheck, Clock3, MessageSquareText, TriangleAlert } from "lucide-react";
+import { ArrowDown, ArrowRight, Check, CheckCheck, Clock3, MessageSquareText, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LogoMark } from "@/components/brand/Logo";
 import { useI18n } from "@/lib/i18n";
@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 export function LandingPreview() {
   const { t } = useI18n();
   const [delayed, setDelayed] = useState(false);
+  const [tried, setTried] = useState(false);
   const patients = [
     { name: t("landing.patient1"), time: "9:30", status: t("landing.waiting"), icon: Clock3 },
     { name: t("landing.patient2"), time: "9:45", status: t("landing.confirmed"), icon: Check },
@@ -32,13 +33,14 @@ export function LandingPreview() {
             {t("landing.tryIt")} <ArrowDown className="h-3.5 w-3.5" />
           </span>
         )}
-        <Button variant="outline" role="switch" aria-checked={delayed} onClick={() => { setDelayed(!delayed); setTried(true); }} className={cn("delay-cta", !tried && "delay-cta-ring", "h-auto min-h-12 max-w-full gap-3 rounded-full border-border bg-card px-4 py-3 text-left whitespace-normal shadow-none">
+        <Button variant="outline" role="switch" aria-checked={delayed} onClick={() => { setDelayed(!delayed); setTried(true); }} className={cn("delay-cta", !tried && "delay-cta-ring", "h-auto min-h-12 max-w-full gap-3 rounded-full border-border bg-card px-4 py-3 text-left whitespace-normal shadow-none")}>
           <Clock3 aria-hidden="true" />
           <span className="flex-1">{t("landing.delay")}</span>
           <span aria-hidden="true" className={cn("relative h-6 w-10 shrink-0 rounded-full transition-colors", delayed ? "bg-primary" : "bg-muted")}>
             <span className={cn("absolute top-1 h-4 w-4 rounded-full bg-card transition-transform", delayed ? "translate-x-5" : "translate-x-1")} />
           </span>
         </Button>
+        </div>
       </div>
 
       <div className="mt-7 grid items-center gap-7 md:grid-cols-[1.15fr_auto_1fr] md:gap-6">
