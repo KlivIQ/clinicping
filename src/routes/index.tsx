@@ -4,7 +4,7 @@
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarClock, PhoneCall, MessageSquareText } from "lucide-react";
-import { Logo } from "@/components/brand/Logo";
+import { Logo, LogoMark } from "@/components/brand/Logo";
 import { Credit, LangToggle } from "@/components/LangToggle";
 import { useI18n } from "@/lib/i18n";
 import { DEMO_OTP, DEMO_PHONE } from "@/lib/mock-data";
@@ -37,7 +37,8 @@ function Landing() {
   return (
     <div className="landing-page min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-4 sm:px-8">
-        <Logo />
+        <span className="min-[400px]:hidden" aria-label="ClinicPing"><LogoMark /></span>
+        <span className="hidden min-[400px]:inline-flex"><Logo /></span>
         <div className="flex shrink-0 items-center gap-1.5">
           <LangToggle />
           <Button asChild variant="outline" className="min-h-12 rounded-full px-3 shadow-none"><Link to="/login">{t("landing.signIn")}</Link></Button>
