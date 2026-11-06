@@ -79,7 +79,7 @@ export function LandingPreview() {
             <div className="min-h-52 p-5" aria-live="polite" aria-atomic="true">
               <div key={String(delayed)} className="preview-message">
                 <p className="mb-3 text-xs font-semibold text-muted-foreground">{t(delayed ? "landing.delayUpdate" : "landing.reminder")}</p>
-                <p className="text-base leading-relaxed">{t(delayed ? "landing.delayMessage" : "landing.message", { time: previewTime("9:30", delayed) })}</p>
+                <p className="text-base leading-relaxed">{t(delayed ? "landing.delayMessage" : "landing.message", { time: formatClock(previewTime("9:30", delayed), lang) })}</p>
                 <CheckCheck className="ml-auto mt-4 h-4 w-4 text-risk-low" aria-hidden="true" />
               </div>
             </div>

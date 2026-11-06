@@ -11,8 +11,9 @@ import { ScreenHeader } from "@/components/Placeholder";
 import { LangToggle } from "@/components/LangToggle";
 import { RiskChip, StatusChip } from "@/components/Chips";
 import { useI18n } from "@/lib/i18n";
-import { defaultHours, useClinicDemo } from "@/lib/mock-data";
-import { active, hasConflict, localDate, reschedule, slotsForDay } from "@/lib/clinic-demo";
+import { useClinicDemo } from "@/lib/mock-data";
+import { active, daySlots as slotsFor, freeSlots, localDate, reschedule } from "@/lib/clinic-demo";
+import { formatTime } from "@/lib/time-format";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_clinic/calendar")({
@@ -46,10 +47,9 @@ function Calendar() {
   // Same set as Today: every appointment on the day, including completed ones.
   const dayAppts = state.appointments.filter((a) => localDate(new Date(a.startsAt)) === day);
   const name = (id: string) => state.patients.find((p) => p.id === id)?.fullName ?? "";
-  const time = (v: string) => new Date(v).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
-  const daySlots = slotsForDay(day, defaultHours);
-  const nowMs = Date.now();
-  const free = daySlots.filter((s) => new Date(iso(day, s)).getTime() > nowMs && !hasConflict(state.appointments, iso(day, s), 15));
+  const time = (v: string) => formatTime(v, lang);
+  const daySlots = slotsFor(day, state.settings);
+  const free = freeSlots(day, state.settings, state.appointments);
   type Item = { key: string; at: string; kind: "appt"; id: string } | { key: string; at: string; kind: "free"; slot: string };
   const timeline: Item[] = [
     ...dayAppts.map((a) => ({ key: a.id, at: hhmm(a.startsAt), kind: "appt" as const, id: a.id })),
@@ -97,11 +97,11 @@ function Calendar() {
                     <li key={it.key}>
                       {moving ? (
                         <button onClick={() => { setState((s) => reschedule(s, moving, iso(day, it.slot))); setMoving(null); }} className={cn(cls, "border-peach bg-peach-soft")}>
-                          <span className="w-16 tabular-nums">{time(iso(day, it.slot))}</span><span>{t("calendar.free")}</span>
+                          <span className="w-20 shrink-0 tabular-nums">{time(iso(day, it.slot))}</span><span>{t("calendar.free")}</span>
                         </button>
                       ) : (
                         <Link to="/add" search={{ date: day, time: it.slot }} className={cn(cls, "border-border text-muted-foreground hover:bg-card")}>
-                          <span className="w-16 tabular-nums">{time(iso(day, it.slot))}</span><span className="flex-1">{t("calendar.freeSlot")}</span><Plus className="h-4 w-4" />
+                          <span className="w-20 shrink-0 tabular-nums">{time(iso(day, it.slot))}</span><span className="flex-1">{t("calendar.freeSlot")}</span><Plus className="h-4 w-4" />
                         </Link>
                       )}
                     </li>
@@ -112,7 +112,7 @@ function Calendar() {
                 return (
                   <li key={it.key} className={cn("rounded-2xl border bg-card p-3", moving === a.id ? "border-primary" : "border-border")}>
                     <div className="flex items-start gap-3">
-                      <span className={cn("w-16 pt-0.5 text-sm font-semibold tabular-nums", closed && "text-muted-foreground")}>{time(a.startsAt)}</span>
+                      <span className={cn("w-20 shrink-0 pt-0.5 text-sm font-semibold tabular-nums", closed && "text-muted-foreground")}>{time(a.startsAt)}</span>
                       <div className="min-w-0 flex-1">
                         <p className={cn("font-semibold", closed && "font-medium text-muted-foreground")}>{name(a.patientId)}</p>
                         <div className="mt-1 flex flex-wrap gap-1">

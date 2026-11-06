@@ -144,7 +144,7 @@ export const ta: Record<I18nKey, string> = {
   "add.invalid": "பெயர், சரியான 10 இலக்க மொபைல் எண் மற்றும் எதிர்மறை அல்லாத முழு எண் கட்டணத்தை உள்ளிடவும்.", // NEEDS NATIVE REVIEW
   "add.conflict": "இந்த நேரத்தில் மற்றொரு சந்திப்பு உள்ளது. வேறு நேரத்தைத் தேர்வுசெய்க.", // NEEDS NATIVE REVIEW
   "add.closed": "இந்த நாளில் நேரங்கள் இல்லை", // NEEDS NATIVE REVIEW
-  "add.slot": "15 நிமிடச் சந்திப்பு", // NEEDS NATIVE REVIEW
+  "add.slot": "{n} நிமிடச் சந்திப்பு", // NEEDS NATIVE REVIEW
   "add.duplicate": "இந்த எண் ஏற்கனவே ஒரு நோயாளியிடம் உள்ளது. பட்டியலில் அவரைத் தேர்வுசெய்க.", // NEEDS NATIVE REVIEW
   "calendar.available": "காலியான நேரங்கள்", // NEEDS NATIVE REVIEW
   "calendar.booked": "சந்திப்புகள்", // NEEDS NATIVE REVIEW

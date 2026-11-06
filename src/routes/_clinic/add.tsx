@@ -9,8 +9,9 @@ import { useMemo, useState } from "react";
 import { ChevronDown, UserPlus, X } from "lucide-react";
 import { ScreenHeader } from "@/components/Placeholder";
 import { useI18n } from "@/lib/i18n";
-import { defaultHours, demoDoctor, demoPractice, useClinicDemo } from "@/lib/mock-data";
-import { addAppointment, hasConflict, localDate, slotsForDay, validateNew } from "@/lib/clinic-demo";
+import { useClinicDemo } from "@/lib/mock-data";
+import { addAppointment, freeSlots, localDate, validateNew } from "@/lib/clinic-demo";
+import { formatClock } from "@/lib/time-format";
 import type { Lang } from "@/lib/models";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +39,7 @@ const chip = "min-h-12 rounded-full border px-4 text-sm font-medium";
 const plusDays = (n: number) => { const d = new Date(); d.setDate(d.getDate() + n); return localDate(d); };
 
 function Add() {
-  const { t } = useI18n();
+  const { t, lang: uiLang } = useI18n();
   const nav = useNavigate();
   const search = Route.useSearch();
   const { state, setState } = useClinicDemo();
@@ -47,11 +48,11 @@ function Add() {
   const [query, setQuery] = useState("");
   const [patientId, setPatientId] = useState<string | null>(null);
   const [phone, setPhone] = useState("");
-  const [lang, setLang] = useState<Lang>(demoDoctor.preferredLang);
+  const [lang, setLang] = useState<Lang>(state.settings.defaultReminderLang);
   const [date, setDate] = useState(search.date ?? todayKey);
   const [otherDate, setOtherDate] = useState(!!search.date && search.date !== todayKey && search.date !== tomorrowKey);
   const [picked, setPicked] = useState<string | null>(search.time ?? null);
-  const [fee, setFee] = useState(String(demoPractice.defaultFeeInr));
+  const [fee, setFee] = useState(String(state.settings.defaultFeeInr));
   const [error, setError] = useState<string | null>(null);
 
   const selected = state.patients.find((p) => p.id === patientId);
@@ -61,11 +62,7 @@ function Add() {
     p.fullName.toLowerCase().includes(q) || (digits.length >= 3 && p.phone.includes(digits))).slice(0, 5), [q, digits, selected, state.patients]);
   const isNew = !selected && q.length > 0;
 
-  const nowMs = Date.now();
-  const slots = slotsForDay(date, defaultHours).filter((s) => {
-    const iso = new Date(`${date}T${s}`).toISOString();
-    return new Date(iso).getTime() > nowMs && !hasConflict(state.appointments, iso, 15);
-  });
+  const slots = freeSlots(date, state.settings, state.appointments);
   const nextFree = slots[0] ?? "";
   const slot = picked && slots.includes(picked) ? picked : nextFree;
 
@@ -73,7 +70,7 @@ function Add() {
     const p = state.patients.find((x) => x.id === id)!;
     setPatientId(id); setQuery(p.fullName); setLang(p.preferredLang); setError(null);
   };
-  const clearPatient = () => { setPatientId(null); setQuery(""); setLang(demoDoctor.preferredLang); };
+  const clearPatient = () => { setPatientId(null); setQuery(""); setLang(state.settings.defaultReminderLang); };
   const onQuery = (v: string) => {
     setQuery(v); setPatientId(null); setError(null);
     // Typing a number for a new patient fills the mobile field too.
@@ -141,12 +138,12 @@ function Add() {
         </div>
 
         <div className="space-y-2">
-          <span className="text-sm font-medium">{t("add.time")} · {t("add.slot")}</span>
+          <span className="text-sm font-medium">{t("add.time")} · {t("add.slot", { n: String(state.settings.slotMinutes) })}</span>
           {slots.length === 0 ? <p className="text-sm text-muted-foreground">{t("add.closed")}</p> : (
             <div className="grid grid-cols-4 gap-2">
               {slots.map((s) => (
                 <button key={s} onClick={() => setPicked(s)} className={cn("relative min-h-12 rounded-xl border text-sm tabular-nums", slot === s ? "border-peach bg-peach font-semibold text-accent-foreground" : "border-border bg-card")}>
-                  {s}
+                  {formatClock(s, uiLang)}
                   {s === nextFree && <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-primary px-1.5 text-[10px] text-primary-foreground">{t("add.nextFree")}</span>}
                 </button>
               ))}
@@ -174,7 +171,7 @@ function Add() {
         <div className="mx-auto max-w-md space-y-2">
           {error && <p role="alert" className="text-sm text-risk-high">{error}</p>}
           <button onClick={save} className="min-h-12 w-full rounded-full bg-primary font-medium text-primary-foreground">
-            {t("add.save")}{slot ? ` · ${slot}` : ""}
+            {t("add.save")}{slot ? ` · ${formatClock(slot, uiLang)}` : ""}
           </button>
         </div>
       </div>

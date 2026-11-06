@@ -16,7 +16,7 @@ export const phase2En = {
   'add.date': 'Date', 'add.time': 'Time', 'add.fee': 'Fee (₹)', 'add.save': 'Save appointment',
   'add.saved': 'Appointment saved', 'add.invalid': 'Enter a name, valid 10-digit mobile number and non-negative whole-number fee.',
   'add.conflict': 'This time overlaps another appointment. Choose another slot.',
-  'add.closed': 'No slots available on this day', 'add.slot': '15-minute appointment',
+  'add.closed': 'No slots available on this day', 'add.slot': '{n}-minute appointment',
   'add.duplicate': 'This phone number already belongs to a patient. Select them from existing patients.',
   'calendar.available': 'Available slots', 'calendar.booked': 'Appointments', 'calendar.prev': 'Previous week',
   'calendar.next': 'Next week', 'calendar.today': 'Today', 'calendar.closed': 'Clinic closed',

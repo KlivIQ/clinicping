@@ -182,10 +182,6 @@ function Settings() {
           </div>
         </Section>
 
-        <button onClick={() => { clearSession(); nav({ to: "/" }); }} className="min-h-12 w-full rounded-full border border-border font-medium">
-          {t("settings.logout")}
-        </button>
-
         <div className="rounded-2xl border border-border bg-card">
           <button aria-expanded={staffOpen} onClick={() => setStaffOpen(!staffOpen)} className="flex min-h-12 w-full items-center justify-between gap-2 px-4 font-medium">
             <span className="flex items-center gap-2"><UserPlus className="h-4 w-4" /> {t("settings.addStaff")}</span>
@@ -211,6 +207,10 @@ function Settings() {
             </div>
           )}
         </div>
+
+        <button onClick={() => { clearSession(); nav({ to: "/" }); }} className="min-h-12 w-full rounded-full border border-border font-medium">
+          {t("settings.logout")}
+        </button>
       </div>
     </>
   );

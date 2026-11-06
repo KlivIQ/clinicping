@@ -14,6 +14,8 @@ import { useI18n, type I18nKey } from "@/lib/i18n";
 import { useClinicDemo } from "@/lib/mock-data";
 import { addReminder, applyDelay, beginConsultation, localDate, updateStatus } from "@/lib/clinic-demo";
 import { cn } from "@/lib/utils";
+import { formatTime } from "@/lib/time-format";
+import type { Lang } from "@/lib/models";
 
 export const Route = createFileRoute("/_clinic/today")({
   validateSearch: (s: Record<string, unknown>): { added?: string } => (typeof s['added'] === "string" ? { added: s['added'] } : {}),
@@ -31,7 +33,7 @@ export const Route = createFileRoute("/_clinic/today")({
   component: Today,
 });
 
-export const timeOf = (iso: string) => new Date(iso).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
+export const timeOf = (iso: string, lang: Lang = "en") => formatTime(iso, lang);
 const btn = "min-h-12 rounded-full px-4 text-sm font-medium";
 
 function Today() {
@@ -61,7 +63,7 @@ function Today() {
         <p className="text-base font-semibold">{t("today.header", { date: dateLabel, count: String(rows.length) })}</p>
         {addedRow && (
           <p role="status" className="flex items-center gap-2 rounded-xl border border-primary bg-card px-3 py-2 text-sm font-medium">
-            <Check className="h-4 w-4" /> {t("add.booked", { name: addedRow.patient.fullName, time: timeOf(addedRow.startsAt) })}
+            <Check className="h-4 w-4" /> {t("add.booked", { name: addedRow.patient.fullName, time: timeOf(addedRow.startsAt, lang) })}
           </p>
         )}
 
@@ -92,7 +94,7 @@ function Today() {
               {callFirst.map((r) => (
                 <li key={r.id} className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3">
                   <div className="flex-1">
-                    <p className="font-semibold">{r.patient.fullName} · {timeOf(r.startsAt)}</p>
+                    <p className="font-semibold">{r.patient.fullName} · {timeOf(r.startsAt, lang)}</p>
                     <p className="text-sm text-risk-high">{t(r.riskReasonKey as I18nKey)}</p>
                   </div>
                   <a href={`tel:${r.patient.phone}`} className="flex min-h-12 items-center gap-2 rounded-full bg-peach px-4 font-medium text-accent-foreground">
@@ -114,7 +116,7 @@ function Today() {
               return (
                 <li key={r.id} className={cn("rounded-2xl border bg-card p-3", inConsult ? "border-primary" : "border-border", r.id === added && "ring-2 ring-peach")}>
                   <div className="flex items-start gap-3">
-                    <span className={cn("w-16 pt-0.5 text-sm font-semibold tabular-nums", closed && "text-muted-foreground")}>{timeOf(r.startsAt)}</span>
+                    <span className={cn("w-20 shrink-0 pt-0.5 text-sm font-semibold tabular-nums", closed && "text-muted-foreground")}>{timeOf(r.startsAt, lang)}</span>
                     <div className="min-w-0 flex-1">
                       <p className={cn("font-semibold", closed && "font-medium text-muted-foreground")}>{r.patient.fullName}</p>
                       <div className="mt-1 flex flex-wrap items-center gap-1">
@@ -160,7 +162,7 @@ function Today() {
             <ul className="space-y-2">
               {upcoming.map((r) => (
                 <li key={r.id} className="flex items-center justify-between gap-2">
-                  <span className="text-sm">{timeOf(r.startsAt)} · {r.patient.fullName}</span>
+                  <span className="text-sm">{timeOf(r.startsAt, lang)} · {r.patient.fullName}</span>
                   <button onClick={() => { setState((s) => addReminder(s, r.id)); setSent(r.id); }} className={cn(btn, "border border-border")}>
                     {sent === r.id ? t("queue.sent") : t("queue.remind")}
                   </button>
