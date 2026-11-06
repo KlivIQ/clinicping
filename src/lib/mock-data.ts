@@ -4,10 +4,11 @@
  *
  * Seed data for a fictional Chennai practice. Replace with backend queries later.
  */
-import type { Appointment, Doctor, Patient, Practice, Reminder, WorkingHours } from "./models";
+import type { Appointment, ClinicSettings, Doctor, Patient, Practice, Reminder, WorkingHours } from "./models";
+import type { DemoState } from "./clinic-demo";
 export { useClinicDemo } from './clinic-demo-context';
-export function createClinicDemoState() {
-  return { appointments: appointments.map(a => ({ ...a })), patients: patients.map(p => ({ ...p })), reminders: reminders.map(r => ({ ...r })), consultationId: null, delayMinutes: 0 };
+export function createClinicDemoState(): DemoState {
+  return { appointments: appointments.map(a => ({ ...a })), patients: patients.map(p => ({ ...p })), reminders: reminders.map(r => ({ ...r })), consultationId: null, delayMinutes: 0, settings: structuredClone(defaultSettings) };
 }
 
 export const DEMO_PHONE = "9840012345";
@@ -73,8 +74,24 @@ export const appointments: Appointment[] = [
   { id: "apt_6", patientId: "pat_6", startsAt: at(18, 15), source: "whatsapp", status: "booked", riskLevel: "medium", riskReasonKey: "risk.rescheduled", bookedAt: daysAgo(2) },
 ].map((a) => ({ ...a, practiceId: "prc_1", durationMinutes: 15, feeInr: 400 })) as Appointment[];
 
+const before = (aptId: string, hours: number) => new Date(new Date(appointments.find((a) => a.id === aptId)!.startsAt).getTime() - hours * 3600000).toISOString();
+// Automatic reminders go out 24 h and 2 h before each visit. Past ones carry sentAt; future ones are queued.
 export const reminders: Reminder[] = [
-  { id: "rem_1", appointmentId: "apt_4", channel: "whatsapp", lang: "en", state: "confirmed", sentAt: daysAgo(1), updatedAt: daysAgo(1), isManual: false },
-  { id: "rem_2", appointmentId: "apt_5", channel: "whatsapp", lang: "ta", state: "no_reply", sentAt: daysAgo(1), updatedAt: daysAgo(1), isManual: false },
-  { id: "rem_3", appointmentId: "apt_2", channel: "whatsapp", lang: "en", state: "delivered", sentAt: daysAgo(1), updatedAt: daysAgo(1), isManual: false },
+  { id: "rem_1", appointmentId: "apt_4", channel: "whatsapp", lang: "en", state: "confirmed", offset: "24h", scheduledFor: before("apt_4", 24), sentAt: before("apt_4", 24), updatedAt: before("apt_4", 22), isManual: false },
+  { id: "rem_2", appointmentId: "apt_5", channel: "whatsapp", lang: "ta", state: "no_reply", offset: "24h", scheduledFor: before("apt_5", 24), sentAt: before("apt_5", 24), updatedAt: before("apt_5", 24), isManual: false },
+  { id: "rem_3", appointmentId: "apt_2", channel: "whatsapp", lang: "en", state: "delivered", offset: "24h", scheduledFor: before("apt_2", 24), sentAt: before("apt_2", 24), updatedAt: before("apt_2", 24), isManual: false },
+  { id: "rem_4", appointmentId: "apt_6", channel: "whatsapp", lang: "ta", state: "queued", offset: "2h", scheduledFor: before("apt_6", 2), updatedAt: before("apt_6", 26), isManual: false },
 ];
+
+/** Settings defaults: Mon–Sat 9 am–8 pm with an afternoon break, Sunday closed. */
+export const defaultSettings: ClinicSettings = {
+  practiceName: `Dr. ${demoDoctor.fullName}`,
+  hours: ([0, 1, 2, 3, 4, 5, 6] as const).map((weekday) => ({ weekday, opensAt: "09:00", closesAt: "20:00", closed: weekday === 0 })),
+  slotMinutes: 15,
+  defaultFeeInr: 400,
+  defaultReminderLang: "ta",
+  breaks: [{ id: "brk_1", startsAt: "13:00", endsAt: "17:00" }],
+  daysOff: [],
+  whatsappConnected: true,
+  staffInvites: [],
+};
