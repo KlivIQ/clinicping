@@ -11,7 +11,8 @@ import { DEMO_OTP, DEMO_PHONE } from "@/lib/mock-data";
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LandingPreview } from "@/components/LandingPreview";
-import clinicReception from "@/assets/clinic-reception.jpg";
+import heroMobile from "@/assets/clinic-waiting-room-mobile.webp.asset.json";
+import heroDesktop from "@/assets/clinic-waiting-room-desktop.webp.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,7 +48,10 @@ function Landing() {
 
       <main>
         <section className="landing-hero relative isolate overflow-hidden border-y border-border">
-          <img src={clinicReception} alt="" width={1536} height={768} fetchPriority="high" className="landing-hero-photo absolute inset-0 -z-20 h-full w-full object-cover" />
+          <picture className="absolute inset-0 -z-20">
+            <source media="(min-width: 768px)" srcSet={heroDesktop.url} type="image/webp" width={1600} height={900} />
+            <img src={heroMobile.url} alt="A clinic waiting room with patients seated along the wall and a receptionist working at her desk" width={800} height={993} fetchPriority="high" className="landing-hero-photo h-full w-full object-cover" />
+          </picture>
           <div className="landing-hero-veil absolute inset-0 -z-10" />
           <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
             <div className="max-w-lg">
