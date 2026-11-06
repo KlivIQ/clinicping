@@ -38,7 +38,10 @@ function Landing() {
     <div className="landing-page min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-4 sm:px-8">
         <Logo />
-        <LangToggle />
+        <div className="flex items-center gap-2">
+          <LangToggle />
+          <Button asChild variant="outline" className="min-h-12 rounded-full px-5 shadow-none"><Link to="/login">{t("landing.signIn")}</Link></Button>
+        </div>
       </header>
 
       <main>
