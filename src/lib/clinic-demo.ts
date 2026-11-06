@@ -1,8 +1,8 @@
 /* ClinicPing — © 2026 KlivIQ Technologies. Built by KlivIQ Technologies. */
-import type { Appointment, Patient, Reminder, WorkingHours } from './models';
+import type { Appointment, ClinicSettings, Patient, Reminder, WorkingHours } from './models';
 
 export type DemoReminder = Reminder & { kind?: 'appointment' | 'delay'; previewTime?: string };
-export type DemoState = { appointments: Appointment[]; patients: Patient[]; reminders: DemoReminder[]; consultationId: string | null; delayMinutes: number };
+export type DemoState = { appointments: Appointment[]; patients: Patient[]; reminders: DemoReminder[]; consultationId: string | null; delayMinutes: number; settings: ClinicSettings };
 export const active = (a: Appointment) => a.status === 'booked' || a.status === 'arrived';
 export function localDate(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -33,7 +33,8 @@ export function applyDelay(state: DemoState, minutes: number, date: string): Dem
   const shifted = state.appointments.map(a => ids.has(a.id) ? { ...a, startsAt: new Date(new Date(a.startsAt).getTime() + minutes * 60000).toISOString() } : a);
   const now = new Date().toISOString();
   return { ...state, appointments: shifted, delayMinutes: state.delayMinutes + minutes, reminders: [...state.reminders, ...shifted.filter(a => ids.has(a.id)).map(a => ({ id: crypto.randomUUID(), appointmentId: a.id, channel: 'whatsapp' as const, lang: state.patients.find(p => p.id === a.patientId)?.preferredLang ?? 'en', state: 'delivered' as const, isManual: true, sentAt: now, updatedAt: now, kind: 'delay' as const, previewTime: a.startsAt }))] };
-}export function reschedule(state: DemoState, id: string, startsAt: string): DemoState {
+}
+export function reschedule(state: DemoState, id: string, startsAt: string): DemoState {
   const a = state.appointments.find(x => x.id === id);
   if (!a || hasConflict(state.appointments, startsAt, a.durationMinutes, id)) return state;
   return { ...state, appointments: state.appointments.map(x => x.id === id ? { ...x, startsAt } : x) };
@@ -44,7 +45,7 @@ export function validateNew(state: DemoState, n: NewAppointment): 'invalid' | 'd
   if (!n.patientId && (!n.name.trim() || !/^[6-9]\d{9}$/.test(phone))) return 'invalid';
   if (!Number.isInteger(n.feeInr) || n.feeInr < 0) return 'invalid';
   if (!n.patientId && state.patients.some(p => p.phone === `+91${phone}`)) return 'duplicate';
-  if (hasConflict(state.appointments, n.startsAt, 15)) return 'conflict';
+  if (hasConflict(state.appointments, n.startsAt, state.settings.slotMinutes)) return 'conflict';
   return null;
 }
 export function addAppointment(state: DemoState, n: NewAppointment): DemoState {
@@ -55,15 +56,44 @@ export function addAppointment(state: DemoState, n: NewAppointment): DemoState {
     patientId = `pat_${crypto.randomUUID()}`;
     patients = [...patients, { id: patientId, practiceId: 'prc_1', fullName: n.name.trim(), phone: `+91${n.phone.replace(/\D/g, '')}`, preferredLang: n.lang, visitCount: 0, noShowCount: 0, createdAt: now }];
   }
-  const appt: Appointment = { id: `apt_${crypto.randomUUID()}`, practiceId: 'prc_1', patientId, startsAt: n.startsAt, durationMinutes: 15, source: 'manual', status: 'booked', riskLevel: 'low', riskReasonKey: 'risk.regular', feeInr: n.feeInr, bookedAt: now };
+  const appt: Appointment = { id: `apt_${crypto.randomUUID()}`, practiceId: 'prc_1', patientId, startsAt: n.startsAt, durationMinutes: state.settings.slotMinutes, source: 'manual', status: 'booked', riskLevel: 'low', riskReasonKey: 'risk.regular', feeInr: n.feeInr, bookedAt: now };
   return { ...state, patients, appointments: [...state.appointments, appt] };
 }
 export function addReminder(state: DemoState, appointmentId: string): DemoState {
   const a = state.appointments.find(x => x.id === appointmentId); if (!a) return state;
   const now = new Date().toISOString();
   const lang = state.patients.find(p => p.id === a.patientId)?.preferredLang ?? 'en';
-  return { ...state, reminders: [...state.reminders, { id: crypto.randomUUID(), appointmentId, channel: 'whatsapp', lang, state: 'delivered', isManual: true, sentAt: now, updatedAt: now, kind: 'appointment', previewTime: a.startsAt }] };
+  return { ...state, reminders: [...state.reminders, { id: crypto.randomUUID(), appointmentId, channel: 'whatsapp', lang, state: 'delivered', isManual: true, offset: '2h', sentAt: now, updatedAt: now, kind: 'appointment', previewTime: a.startsAt }] };
 }
 export function setReminderState(state: DemoState, id: string, s: Reminder['state']): DemoState {
   return { ...state, reminders: state.reminders.map(r => r.id === id ? { ...r, state: s, updatedAt: new Date().toISOString() } : r) };
+}
+
+const toMin = (v: string) => Number(v.slice(0, 2)) * 60 + Number(v.slice(3, 5));
+const toHm = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+/** Closed weekday or inside any day-off range. */
+export function isClosed(date: string, s: ClinicSettings) {
+  const h = s.hours.find(x => x.weekday === new Date(`${date}T12:00`).getDay());
+  return !h || h.closed || s.daysOff.some(d => date >= d.from && date <= d.to);
+}
+/** Every slot start for a day from working hours and slot length, skipping breaks. Ignores bookings. */
+export function daySlots(date: string, s: ClinicSettings): string[] {
+  if (isClosed(date, s)) return [];
+  const h = s.hours.find(x => x.weekday === new Date(`${date}T12:00`).getDay())!;
+  const len = s.slotMinutes, out: string[] = [];
+  for (let m = toMin(h.opensAt); m + len <= toMin(h.closesAt); m += len) {
+    if (s.breaks.some(b => m < toMin(b.endsAt) && m + len > toMin(b.startsAt))) continue;
+    out.push(toHm(m));
+  }
+  return out;
+}
+/** Slots still bookable: in the future and not overlapping an active appointment. */
+export function freeSlots(date: string, s: ClinicSettings, appts: Appointment[], nowMs = Date.now()) {
+  return daySlots(date, s).filter(slot => {
+    const iso = new Date(`${date}T${slot}`).toISOString();
+    return new Date(iso).getTime() > nowMs && !hasConflict(appts, iso, s.slotMinutes);
+  });
+}
+export function updateSettings(state: DemoState, patch: Partial<ClinicSettings>): DemoState {
+  return { ...state, settings: { ...state.settings, ...patch } };
 }

@@ -8,10 +8,11 @@ import { Button } from "@/components/ui/button";
 import { LogoMark } from "@/components/brand/Logo";
 import { useI18n } from "@/lib/i18n";
 import { previewTime } from "@/lib/landing-demo";
+import { formatClock } from "@/lib/time-format";
 import { cn } from "@/lib/utils";
 
 export function LandingPreview() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [delayed, setDelayed] = useState(false);
   const [tried, setTried] = useState(false);
   const patients = [
@@ -79,7 +80,7 @@ export function LandingPreview() {
             <div className="min-h-52 p-5" aria-live="polite" aria-atomic="true">
               <div key={String(delayed)} className="preview-message">
                 <p className="mb-3 text-xs font-semibold text-muted-foreground">{t(delayed ? "landing.delayUpdate" : "landing.reminder")}</p>
-                <p className="text-base leading-relaxed">{t(delayed ? "landing.delayMessage" : "landing.message", { time: previewTime("9:30", delayed) })}</p>
+                <p className="text-base leading-relaxed">{t(delayed ? "landing.delayMessage" : "landing.message", { time: formatClock(previewTime("9:30", delayed), lang) })}</p>
                 <CheckCheck className="ml-auto mt-4 h-4 w-4 text-risk-low" aria-hidden="true" />
               </div>
             </div>

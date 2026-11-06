@@ -107,3 +107,25 @@ create policy "practice scoped" on public.staff_invites for all using (owns_prac
 create policy "via appointment" on public.reminders for all
   using (exists(select 1 from appointments a where a.id = appointment_id and owns_practice(a.practice_id)))
   with check (exists(select 1 from appointments a where a.id = appointment_id and owns_practice(a.practice_id)));
+
+-- Settings screen (ClinicSettings in src/lib/models.ts)
+alter table practices add column if not exists default_reminder_lang text not null default 'ta' check (default_reminder_lang in ('en','ta'));
+create table if not exists practice_hours (
+  practice_id uuid not null references practices(id) on delete cascade,
+  weekday smallint not null check (weekday between 0 and 6),
+  opens_at time not null, closes_at time not null, closed boolean not null default false,
+  primary key (practice_id, weekday)
+);
+create table if not exists practice_breaks (
+  id uuid primary key default gen_random_uuid(),
+  practice_id uuid not null references practices(id) on delete cascade,
+  starts_at time not null, ends_at time not null
+);
+create table if not exists practice_days_off (
+  id uuid primary key default gen_random_uuid(),
+  practice_id uuid not null references practices(id) on delete cascade,
+  from_date date not null, to_date date not null check (to_date >= from_date)
+);
+alter table reminders add column if not exists "offset" text check ("offset" in ('24h','2h'));
+alter table reminders add column if not exists scheduled_for timestamptz;
+alter table staff_invites add column if not exists name text;
