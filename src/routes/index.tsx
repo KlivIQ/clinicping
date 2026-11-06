@@ -36,11 +36,11 @@ function Landing() {
   ];
   return (
     <div className="landing-page min-h-screen">
-      <header className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-4 sm:px-8">
+      <header className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-4 sm:px-8">
         <Logo />
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5">
           <LangToggle />
-          <Button asChild variant="outline" className="min-h-12 rounded-full px-5 shadow-none"><Link to="/login">{t("landing.signIn")}</Link></Button>
+          <Button asChild variant="outline" className="min-h-12 rounded-full px-3 shadow-none"><Link to="/login">{t("landing.signIn")}</Link></Button>
         </div>
       </header>
 
