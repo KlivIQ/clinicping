@@ -88,6 +88,7 @@ function Calendar() {
         )}
 
         <section>
+          {daySlots.length === 0 && dayAppts.length > 0 && <p className="mb-2 text-sm text-muted-foreground">{t("calendar.closed")}</p>}
           {daySlots.length === 0 && dayAppts.length === 0 ? <p className="text-sm text-muted-foreground">{t("calendar.closed")}</p> : (
             <ol className="space-y-1.5">
               {timeline.map((it) => {

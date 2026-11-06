@@ -8,10 +8,11 @@ import { Button } from "@/components/ui/button";
 import { LogoMark } from "@/components/brand/Logo";
 import { useI18n } from "@/lib/i18n";
 import { previewTime } from "@/lib/landing-demo";
+import { formatClock } from "@/lib/time-format";
 import { cn } from "@/lib/utils";
 
 export function LandingPreview() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [delayed, setDelayed] = useState(false);
   const [tried, setTried] = useState(false);
   const patients = [
