@@ -28,6 +28,11 @@ export const phase2En = {
   'reminders.delivered': 'Delivered', 'reminders.confirmed': 'Confirmed', 'reminders.failed': 'Failed',
   'reminders.no_reply': 'No reply', 'reminders.queued': 'Queued', 'reminders.sent': 'Sent',
   'reminders.delayLabel': 'Delay update', 'reminders.appointmentLabel': 'Appointment reminder',
+  'today.header': '{date} · {count} appointments', 'today.tag': 'Call first', 'queue.startShort': 'Start', 'queue.done': 'Done',
+  'queue.more': 'More actions', 'demo.controls': 'Demo controls', 'add.search': 'Name or mobile number',
+  'add.newHint': 'New patient', 'add.today': 'Today', 'add.tomorrow': 'Tomorrow', 'add.otherDate': 'Other date',
+  'add.more': 'More', 'add.nextFree': 'Next free', 'add.booked': 'Booked {name} at {time}', 'add.change': 'Change',
+  'calendar.freeSlot': 'Free · tap to book', 'calendar.pick': 'Tap a free time to move {name}',
   'common.close': 'Close', 'common.save': 'Save changes', 'common.back': 'Back', 'common.select': 'Select a patient',
 };
 export const phase2Ta: Record<keyof typeof phase2En, string> = {
@@ -59,5 +64,10 @@ export const phase2Ta: Record<keyof typeof phase2En, string> = {
   'reminders.delivered': 'வழங்கப்பட்டது', 'reminders.confirmed': 'உறுதிசெய்தார்', 'reminders.failed': 'தோல்வி',
   'reminders.no_reply': 'பதில் இல்லை', 'reminders.queued': 'வரிசையில்', 'reminders.sent': 'அனுப்பப்பட்டது',
   'reminders.delayLabel': 'தாமதத் தகவல்', 'reminders.appointmentLabel': 'சந்திப்பு நினைவூட்டல்',
+  'today.header': '{date} · {count} சந்திப்புகள்', 'today.tag': 'முதலில் அழை', 'queue.startShort': 'தொடங்கு', 'queue.done': 'முடிந்தது',
+  'queue.more': 'மேலும் செயல்கள்', 'demo.controls': 'மாதிரிக் கட்டுப்பாடுகள்', 'add.search': 'பெயர் அல்லது மொபைல் எண்',
+  'add.newHint': 'புதிய நோயாளி', 'add.today': 'இன்று', 'add.tomorrow': 'நாளை', 'add.otherDate': 'வேறு தேதி',
+  'add.more': 'மேலும்', 'add.nextFree': 'அடுத்த காலி', 'add.booked': '{name} — {time} பதிவு செய்யப்பட்டது', 'add.change': 'மாற்று',
+  'calendar.freeSlot': 'காலி · பதிவு செய்ய தட்டவும்', 'calendar.pick': '{name} அவர்களை மாற்ற காலியான நேரத்தைத் தட்டவும்',
   'common.close': 'மூடு', 'common.save': 'மாற்றங்களைச் சேமி', 'common.back': 'பின்செல்', 'common.select': 'நோயாளியைத் தேர்வுசெய்க',
 };
