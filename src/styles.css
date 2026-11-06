@@ -97,12 +97,12 @@
   --input: oklch(0.88 0.012 75);
   --ring: var(--inkberry);
   /* Colour-blind-safe risk set (Okabe-Ito derived), always paired with icon + label */
-  --risk-high: oklch(0.55 0.16 40);
-  --risk-high-bg: oklch(0.95 0.04 50);
-  --risk-medium: oklch(0.55 0.11 85);
-  --risk-medium-bg: oklch(0.96 0.05 95);
-  --risk-low: oklch(0.5 0.1 235);
-  --risk-low-bg: oklch(0.95 0.025 235);
+  --risk-high: oklch(0.45 0.17 25);
+  --risk-high-bg: oklch(0.95 0.03 20);
+  --risk-medium: oklch(0.48 0.1 70);
+  --risk-medium-bg: oklch(0.96 0.05 85);
+  --risk-low: oklch(0.45 0.08 195);
+  --risk-low-bg: oklch(0.95 0.03 190);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);

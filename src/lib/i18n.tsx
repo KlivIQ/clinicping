@@ -135,7 +135,7 @@ const ta: Record<Key, string> = {
   "nav.today": "இன்று",
   "nav.calendar": "நாட்காட்டி",
   "nav.add": "சேர்",
-  "nav.reminders": "நினைவூட்டல்",
+  "nav.reminders": "நினைவூட்டு",
   "nav.settings": "அமைப்புகள்",
   "soon": "அடுத்த கட்டத்தில் வருகிறது",
   "today.callFirst": "முதலில் அழைக்கவும்",
