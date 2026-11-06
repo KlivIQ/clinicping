@@ -46,7 +46,7 @@ function ClinicLayout() {
             <li key={tab.to}>
               <Link
                 to={tab.to}
-                className="flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-medium text-muted-foreground"
+                className="flex min-h-16 flex-col items-center justify-center gap-0.5 px-0.5 text-center text-[10.5px] font-medium leading-tight tracking-tight text-muted-foreground"
                 activeProps={{ className: "text-primary" }}
               >
                 {"primary" in tab ? (
@@ -54,7 +54,7 @@ function ClinicLayout() {
                 ) : (
                   <tab.icon className="h-6 w-6" />
                 )}
-                <span className="max-w-full truncate px-1">{tab.label}</span>
+                <span className="max-w-full whitespace-nowrap">{tab.label}</span>
               </Link>
             </li>
           ))}

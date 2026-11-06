@@ -88,8 +88,9 @@ function Add() {
     const n = { patientId: selected?.id, name: nameIsNumber ? "" : query, phone, lang, startsAt: new Date(`${date}T${slot}`).toISOString(), feeInr: Number(fee) };
     const err = validateNew(state, n);
     if (err) return setError(t(`add.${err}`));
-    let newId = "";
-    setState((s) => { const next = addAppointment(s, n); newId = next.appointments[next.appointments.length - 1]!.id; return next; });
+    const next = addAppointment(state, n);
+    const newId = next.appointments[next.appointments.length - 1]!.id;
+    setState(next);
     nav({ to: date === todayKey ? "/today" : "/calendar", search: date === todayKey ? { added: newId } : undefined });
   };
 
