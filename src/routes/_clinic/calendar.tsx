@@ -97,11 +97,11 @@ function Calendar() {
                     <li key={it.key}>
                       {moving ? (
                         <button onClick={() => { setState((s) => reschedule(s, moving, iso(day, it.slot))); setMoving(null); }} className={cn(cls, "border-peach bg-peach-soft")}>
-                          <span className="w-16 tabular-nums">{it.slot}</span><span>{t("calendar.free")}</span>
+                          <span className="w-16 tabular-nums">{time(iso(day, it.slot))}</span><span>{t("calendar.free")}</span>
                         </button>
                       ) : (
                         <Link to="/add" search={{ date: day, time: it.slot }} className={cn(cls, "border-border text-muted-foreground hover:bg-card")}>
-                          <span className="w-16 tabular-nums">{it.slot}</span><span className="flex-1">{t("calendar.freeSlot")}</span><Plus className="h-4 w-4" />
+                          <span className="w-16 tabular-nums">{time(iso(day, it.slot))}</span><span className="flex-1">{t("calendar.freeSlot")}</span><Plus className="h-4 w-4" />
                         </Link>
                       )}
                     </li>
