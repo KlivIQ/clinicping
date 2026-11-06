@@ -8,7 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { ScreenHeader } from "@/components/Placeholder";
-import { LangToggle } from "@/components/LangToggle";
+import { SignOutButton } from "@/components/SignOutButton";
 import { RiskChip, StatusChip } from "@/components/Chips";
 import { translate, useI18n, type I18nKey } from "@/lib/i18n";
 import { useClinicDemo } from "@/lib/mock-data";
@@ -46,7 +46,7 @@ function Reminders() {
 
   return (
     <>
-      <ScreenHeader title={t("reminders.title")} right={<LangToggle />} />
+      <ScreenHeader title={t("reminders.title")} right={<SignOutButton />} />
       <div className="space-y-4 px-5">
         <p className="rounded-xl bg-muted px-3 py-2 text-xs text-muted-foreground">{t("demo.notice")}</p>
         {rows.length === 0 && <p className="text-sm text-muted-foreground">{t("reminders.empty")}</p>}

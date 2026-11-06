@@ -3,7 +3,7 @@
 
 **Fewer empty chairs. Calmer days.** ClinicPing is a mobile-first web app that helps Indian doctors and small clinics run a calm daily queue, keep patients informed about delays, and reduce no-shows with timely reminders — in English and Tamil.
 
-Built by **KlivIQ Technologies**.
+ClinicPing · Built by **KlivIQ Technologies**
 
 ---
 

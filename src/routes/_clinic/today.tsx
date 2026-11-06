@@ -8,7 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Check, ChevronDown, Clock, MoreHorizontal, Phone } from "lucide-react";
 import { ScreenHeader } from "@/components/Placeholder";
-import { LangToggle } from "@/components/LangToggle";
+import { SignOutButton } from "@/components/SignOutButton";
 import { RiskChip, StatusChip } from "@/components/Chips";
 import { useI18n, type I18nKey } from "@/lib/i18n";
 import { useClinicDemo } from "@/lib/mock-data";
@@ -58,7 +58,7 @@ function Today() {
 
   return (
     <>
-      <ScreenHeader title={t("nav.today")} right={<LangToggle />} />
+      <ScreenHeader title={t("nav.today")} right={<SignOutButton />} />
       <div className="space-y-6 px-5">
         <p className="text-base font-semibold">{t("today.header", { date: dateLabel, count: String(rows.length) })}</p>
         {addedRow && (

@@ -25,7 +25,11 @@ export const ta: Record<I18nKey, string> = {
   "landing.f3.t": "தமிழ் அல்லது ஆங்கிலத்தில் நினைவூட்டல்", // NEEDS NATIVE REVIEW
   "landing.f3.d": "நோயாளிகள் படிக்கும் மொழியிலேயே செய்தி.", // NEEDS NATIVE REVIEW
   "landing.demo": "டெமோ: எண் {phone}, OTP {otp}", // NEEDS NATIVE REVIEW
-  "footer.credit": "Built by KlivIQ Technologies", // NEEDS NATIVE REVIEW
+  "footer.credit": "ClinicPing · Built by KlivIQ Technologies", // NEEDS NATIVE REVIEW (kept in English by request)
+  "signout.aria": "வெளியேறு", // NEEDS NATIVE REVIEW
+  "signout.title": "ClinicPing-இலிருந்து வெளியேறவா?", // NEEDS NATIVE REVIEW
+  "signout.confirm": "வெளியேறு", // NEEDS NATIVE REVIEW
+  "signout.cancel": "ரத்து", // NEEDS NATIVE REVIEW
   "login.title": "உங்கள் மொபைல் எண்ணை உள்ளிடுங்கள்", // NEEDS NATIVE REVIEW
   "login.sub": "6 இலக்க குறியீட்டை SMS மூலம் அனுப்புவோம்.", // NEEDS NATIVE REVIEW
   "login.phone": "மொபைல் எண்", // NEEDS NATIVE REVIEW

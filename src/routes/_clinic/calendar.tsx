@@ -8,7 +8,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, MoreHorizontal, Plus } from "lucide-react";
 import { ScreenHeader } from "@/components/Placeholder";
-import { LangToggle } from "@/components/LangToggle";
+import { SignOutButton } from "@/components/SignOutButton";
 import { RiskChip, StatusChip } from "@/components/Chips";
 import { useI18n } from "@/lib/i18n";
 import { useClinicDemo } from "@/lib/mock-data";
@@ -59,7 +59,7 @@ function Calendar() {
 
   return (
     <>
-      <ScreenHeader title={t("nav.calendar")} right={<LangToggle />} />
+      <ScreenHeader title={t("nav.calendar")} right={<SignOutButton />} />
       <div className="space-y-5 px-5">
         <div className="flex items-center justify-between">
           <button aria-label={t("calendar.prev")} onClick={() => setOffset(offset - 1)} className="flex h-12 w-12 items-center justify-center rounded-full border border-border"><ChevronLeft className="h-5 w-5" /></button>
