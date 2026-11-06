@@ -6,16 +6,17 @@
  */
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { AlertTriangle, Circle, Clock, Minus, Phone } from "lucide-react";
+import { Check, ChevronDown, Clock, MoreHorizontal, Phone } from "lucide-react";
 import { ScreenHeader } from "@/components/Placeholder";
 import { LangToggle } from "@/components/LangToggle";
+import { RiskChip, StatusChip } from "@/components/Chips";
 import { useI18n, type I18nKey } from "@/lib/i18n";
 import { useClinicDemo } from "@/lib/mock-data";
 import { addReminder, applyDelay, beginConsultation, localDate, updateStatus } from "@/lib/clinic-demo";
-import type { RiskLevel } from "@/lib/models";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_clinic/today")({
+  validateSearch: (s: Record<string, unknown>): { added?: string } => (typeof s.added === "string" ? { added: s.added } : {}),
   head: () => ({
     meta: [
       { title: "Today — ClinicPing" },
@@ -30,34 +31,39 @@ export const Route = createFileRoute("/_clinic/today")({
   component: Today,
 });
 
-const riskStyle: Record<RiskLevel, { cls: string; Icon: typeof Circle }> = {
-  high: { cls: "bg-risk-high-bg text-risk-high", Icon: AlertTriangle },
-  medium: { cls: "bg-risk-medium-bg text-risk-medium", Icon: Minus },
-  low: { cls: "bg-risk-low-bg text-risk-low", Icon: Circle },
-};
 export const timeOf = (iso: string) => new Date(iso).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
 const btn = "min-h-12 rounded-full px-4 text-sm font-medium";
 
 function Today() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const { added } = Route.useSearch();
   const { state, setState } = useClinicDemo();
   const [confirmDelay, setConfirmDelay] = useState(false);
+  const [menuId, setMenuId] = useState<string | null>(null);
   const [cancelId, setCancelId] = useState<string | null>(null);
   const [sent, setSent] = useState<string | null>(null);
-  const today = localDate(new Date());
+  const now = new Date();
+  const today = localDate(now);
   const rows = state.appointments
     .filter((a) => localDate(new Date(a.startsAt)) === today)
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt))
     .map((a) => ({ ...a, patient: state.patients.find((p) => p.id === a.patientId)! }));
   const callFirst = rows.filter((r) => r.riskLevel === "high" && r.status === "booked");
-  const statusLabel = (r: (typeof rows)[number]) =>
-    state.consultationId === r.id ? t("queue.consultation") : r.status === "done" ? t("queue.completed") : r.status === "booked" ? t("queue.upcoming") : t(`status.${r.status}` as I18nKey);
+  const callFirstIds = new Set(callFirst.map((r) => r.id));
+  const upcoming = rows.filter((r) => r.status === "booked");
+  const addedRow = rows.find((r) => r.id === added);
+  const dateLabel = now.toLocaleDateString(lang === "ta" ? "ta-IN" : "en-IN", { weekday: "short", day: "numeric", month: "short" });
 
   return (
     <>
       <ScreenHeader title={t("nav.today")} right={<LangToggle />} />
       <div className="space-y-6 px-5">
-        <p className="rounded-xl bg-muted px-3 py-2 text-xs text-muted-foreground">{t("demo.notice")}</p>
+        <p className="text-base font-semibold">{t("today.header", { date: dateLabel, count: String(rows.length) })}</p>
+        {addedRow && (
+          <p role="status" className="flex items-center gap-2 rounded-xl border border-primary bg-card px-3 py-2 text-sm font-medium">
+            <Check className="h-4 w-4" /> {t("add.booked", { name: addedRow.patient.fullName, time: timeOf(addedRow.startsAt) })}
+          </p>
+        )}
 
         <section className="rounded-2xl border border-border bg-card p-4">
           <div className="flex items-center justify-between gap-3">
@@ -103,39 +109,66 @@ function Today() {
           {rows.length === 0 && <p className="text-sm text-muted-foreground">{t("queue.empty")}</p>}
           <ul className="space-y-2">
             {rows.map((r) => {
-              const { cls, Icon } = riskStyle[r.riskLevel];
               const inConsult = state.consultationId === r.id;
               const closed = r.status === "done" || r.status === "no_show" || r.status === "cancelled";
               return (
-                <li key={r.id} className={cn("rounded-2xl border bg-card p-3", inConsult ? "border-primary" : "border-border")}>
+                <li key={r.id} className={cn("rounded-2xl border bg-card p-3", inConsult ? "border-primary" : "border-border", r.id === added && "ring-2 ring-peach")}>
                   <div className="flex items-start gap-3">
-                    <span className="w-16 pt-0.5 text-sm font-semibold tabular-nums">{timeOf(r.startsAt)}</span>
+                    <span className={cn("w-16 pt-0.5 text-sm font-semibold tabular-nums", closed && "text-muted-foreground")}>{timeOf(r.startsAt)}</span>
                     <div className="min-w-0 flex-1">
-                      <p className={cn("font-semibold", closed && "text-muted-foreground line-through")}>{r.patient.fullName}</p>
-                      <p className="text-sm text-muted-foreground">{statusLabel(r)} · {t(`src.${r.source}`)}</p>
+                      <p className={cn("font-semibold", closed && "font-medium text-muted-foreground")}>{r.patient.fullName}</p>
+                      <div className="mt-1 flex flex-wrap items-center gap-1">
+                        <StatusChip appt={r} consultationId={state.consultationId} />
+                        {callFirstIds.has(r.id) && <span className="rounded-full bg-muted px-2 py-1 text-xs font-medium"><Phone className="mr-1 inline h-3 w-3" />{t("today.tag")}</span>}
+                      </div>
                     </div>
-                    <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium", cls)}>
-                      <Icon className="h-3 w-3" /> {t(`risk.${r.riskLevel}`)}
-                    </span>
+                    {!closed && <RiskChip level={r.riskLevel} />}
+                    {r.status === "booked" && (
+                      <button aria-label={t("queue.more")} aria-expanded={menuId === r.id} onClick={() => { setMenuId(menuId === r.id ? null : r.id); setCancelId(null); }}
+                        className="-my-1 -mr-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full hover:bg-muted">
+                        <MoreHorizontal className="h-5 w-5" />
+                      </button>
+                    )}
                   </div>
-                  {!closed && (
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {r.status === "booked" && <button onClick={() => setState((s) => updateStatus(s, r.id, "arrived"))} className={cn(btn, "bg-primary text-primary-foreground")}>{t("queue.arrive")}</button>}
-                      {r.status === "arrived" && !inConsult && <button disabled={!!state.consultationId} onClick={() => setState((s) => beginConsultation(s, r.id))} className={cn(btn, "bg-primary text-primary-foreground disabled:opacity-40")}>{t("queue.start")}</button>}
-                      {inConsult && <button onClick={() => setState((s) => updateStatus(s, r.id, "done"))} className={cn(btn, "bg-peach text-accent-foreground")}>{t("queue.finish")}</button>}
-                      {r.status === "booked" && <button onClick={() => setState((s) => updateStatus(s, r.id, "no_show"))} className={cn(btn, "border border-border")}>{t("queue.noShow")}</button>}
-                      {r.status === "booked" && <button onClick={() => { setState((s) => addReminder(s, r.id)); setSent(r.id); }} className={cn(btn, "border border-border")}>{t("queue.remind")}</button>}
-                      {!inConsult && (cancelId === r.id
-                        ? <button onClick={() => { setState((s) => updateStatus(s, r.id, "cancelled")); setCancelId(null); }} className={cn(btn, "border border-risk-high text-risk-high")}>{t("queue.confirmCancel")}</button>
-                        : <button onClick={() => setCancelId(r.id)} className={cn(btn, "border border-border")}>{t("queue.cancel")}</button>)}
+                  {r.status === "booked" && menuId === r.id && (
+                    <div className="mt-2 flex flex-wrap gap-2 border-t border-border pt-2">
+                      <button onClick={() => { setState((s) => updateStatus(s, r.id, "no_show")); setMenuId(null); }} className={cn(btn, "border border-border")}>{t("queue.noShow")}</button>
+                      {cancelId === r.id
+                        ? <button onClick={() => { setState((s) => updateStatus(s, r.id, "cancelled")); setCancelId(null); setMenuId(null); }} className={cn(btn, "border border-risk-high text-risk-high")}>{t("queue.confirmCancel")}</button>
+                        : <button onClick={() => setCancelId(r.id)} className={cn(btn, "border border-border")}>{t("queue.cancel")}</button>}
                     </div>
                   )}
-                  {sent === r.id && <p className="mt-2 text-xs text-muted-foreground">{t("queue.sent")}</p>}
+                  {!closed && (
+                    <div className="mt-3">
+                      {r.status === "booked" && <button onClick={() => setState((s) => updateStatus(s, r.id, "arrived"))} className={cn(btn, "w-full bg-primary text-primary-foreground")}>{t("queue.arrive")}</button>}
+                      {r.status === "arrived" && !inConsult && <button disabled={!!state.consultationId} onClick={() => setState((s) => beginConsultation(s, r.id))} className={cn(btn, "w-full bg-primary text-primary-foreground disabled:opacity-40")}>{t("queue.startShort")}</button>}
+                      {inConsult && <button onClick={() => setState((s) => updateStatus(s, r.id, "done"))} className={cn(btn, "w-full bg-peach text-accent-foreground")}>{t("queue.done")}</button>}
+                    </div>
+                  )}
                 </li>
               );
             })}
           </ul>
         </section>
+
+        <details className="rounded-2xl border border-dashed border-border bg-card p-3">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between font-medium">
+            {t("demo.controls")} <ChevronDown className="h-4 w-4" />
+          </summary>
+          <p className="mb-2 text-xs text-muted-foreground">{t("demo.notice")}</p>
+          {upcoming.length === 0 ? <p className="text-sm text-muted-foreground">{t("queue.empty")}</p> : (
+            <ul className="space-y-2">
+              {upcoming.map((r) => (
+                <li key={r.id} className="flex items-center justify-between gap-2">
+                  <span className="text-sm">{timeOf(r.startsAt)} · {r.patient.fullName}</span>
+                  <button onClick={() => { setState((s) => addReminder(s, r.id)); setSent(r.id); }} className={cn(btn, "border border-border")}>
+                    {sent === r.id ? t("queue.sent") : t("queue.remind")}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </details>
       </div>
     </>
   );
