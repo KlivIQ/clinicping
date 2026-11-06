@@ -15,8 +15,55 @@ Built by **KlivIQ Technologies**.
 - **Calendar** — weekly view of booked and free slots with rescheduling.
 - **Quick Add** — new appointments with validation and conflict prevention.
 - **Reminders** — simulated reminder log with English/Tamil previews, retry and confirmation (no real messages are sent).
-- **Settings** — clinic profile and language preferences.
+- **Settings** — clinic details, hours, slots, breaks, days off, languages, WhatsApp status and staff invite.
 - **Bilingual** — every screen in English and தமிழ்.
+
+## Screens
+
+| Screen | What it does |
+| --- | --- |
+| Landing (`/`) | What ClinicPing does, with an interactive "Doctor running 15 min late" preview |
+| Sign in (`/login`) | Phone number → OTP → name → clinic ready |
+| Today (`/today`) | Live queue: arrive, consult (one at a time), done, no-show, cancel, 15-min delay |
+| Calendar (`/calendar`) | Week strip plus one day timeline; free gaps open Add with that time |
+| Add (`/add`) | One name-or-mobile box, Today/Tomorrow, next free slot, save |
+| Reminders (`/reminders`) | 24 h / 2 h reminder log, sender, reply buttons, simulated replies under Demo controls |
+| Settings (`/settings`) | Clinic details, hours, slot length, fee, breaks, days off, languages, WhatsApp status, staff invite, sign out |
+
+## Mock data shape
+
+All types live in `src/lib/models.ts` and mirror `supabase/schema.sql`.
+
+```ts
+ClinicSettings { practiceName, address?, registrationNo?, hours: DayHours[], slotMinutes: 10|15|20|30,
+                 defaultFeeInr, defaultReminderLang: "en"|"ta", breaks: DailyBreak[], daysOff: DayOff[],
+                 whatsappConnected, staffInvites: StaffInvite[] }
+DayHours     { weekday: 0-6, opensAt: "09:00", closesAt: "20:00", closed }
+DailyBreak   { id, startsAt: "13:00", endsAt: "14:00" }
+DayOff       { id, from: "YYYY-MM-DD", to: "YYYY-MM-DD" }
+Patient      { id, fullName, phone, preferredLang, visitCount, noShowCount }
+Appointment  { id, patientId, startsAt, durationMinutes, status, riskLevel, riskReasonKey, feeInr, source }
+Reminder     { id, appointmentId, lang, state, offset?: "24h"|"2h", scheduledFor?, sentAt?, updatedAt }
+```
+
+Free slots = working hours stepped by slot length, minus breaks, minus active bookings; closed weekdays and days off have none (`src/lib/clinic-demo.ts`, tested).
+
+## What is mocked
+
+- **Sign-in:** any 10-digit number works; the OTP is always `123456`. Session is kept in the browser.
+- **Data:** a fictional Chennai clinic held in memory. Edits on any screen are shared across screens and reset on reload.
+- **Reminders and WhatsApp:** nothing is sent. The log, delivery states and patient replies are simulated.
+- **Staff invites:** saved in the demo session only; no invite is delivered.
+
+## Tamil copy
+
+All Tamil strings are in `src/lib/copy-ta.ts`, each marked `NEEDS NATIVE REVIEW`. Times read as "மாலை 5:30 மணிக்கு".
+
+## Pending backend work
+
+- **Database:** persist settings, patients, appointments and reminders (schema in `supabase/schema.sql`).
+- **Real phone OTP:** replace the mock code with SMS verification.
+- **WhatsApp:** send 24 h / 2 h reminders and delay updates through an external messaging service, and receive Confirm / Reschedule / Cancel replies.
 
 ## Brand system
 
@@ -46,7 +93,8 @@ src/
   lib/models.ts      Domain types (mirror supabase/schema.sql)
   lib/mock-data.ts   Data access layer used by the UI
   lib/clinic-demo.ts Pure queue & scheduling rules (tested)
-  lib/i18n.tsx       English + Tamil copy
+  lib/i18n.tsx       English copy + translator
+  lib/copy-ta.ts     All Tamil copy (needs native review)
   routes/            Pages (signed-in screens under _clinic/)
 supabase/schema.sql  Database schema ready for a real backend
 ```
