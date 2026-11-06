@@ -192,5 +192,60 @@ export const ta: Record<I18nKey, string> = {
   "common.save": "மாற்றங்களைச் சேமி", // NEEDS NATIVE REVIEW
   "common.back": "பின்செல்", // NEEDS NATIVE REVIEW
   "common.select": "நோயாளியைத் தேர்வுசெய்க", // NEEDS NATIVE REVIEW
-  // @@NEW@@
+  "settings.clinic": "கிளினிக்", // NEEDS NATIVE REVIEW
+  "settings.practiceName": "கிளினிக் பெயர்", // NEEDS NATIVE REVIEW
+  "settings.address": "முகவரி", // NEEDS NATIVE REVIEW
+  "settings.regNo": "பதிவு எண்", // NEEDS NATIVE REVIEW
+  "settings.optional": "விருப்பத்தேர்வு", // NEEDS NATIVE REVIEW
+  "settings.hours": "வேலை நேரம்", // NEEDS NATIVE REVIEW
+  "settings.closedToggle": "மூடல்", // NEEDS NATIVE REVIEW
+  "settings.opens": "திறப்பு", // NEEDS NATIVE REVIEW
+  "settings.closes": "மூடல் நேரம்", // NEEDS NATIVE REVIEW
+  "settings.slots": "நேர இடைவெளிகள்", // NEEDS NATIVE REVIEW
+  "settings.slotLength": "ஒரு சந்திப்பின் நேரம்", // NEEDS NATIVE REVIEW
+  "settings.minutes": "{n} நிமி", // NEEDS NATIVE REVIEW
+  "settings.fee": "வழக்கமான கட்டணம் (₹)", // NEEDS NATIVE REVIEW
+  "settings.breaks": "தினசரி இடைவேளை", // NEEDS NATIVE REVIEW
+  "settings.addBreak": "இடைவேளை சேர்", // NEEDS NATIVE REVIEW
+  "settings.removeBreak": "இடைவேளையை நீக்கு", // NEEDS NATIVE REVIEW
+  "settings.noBreaks": "இடைவேளை இல்லை", // NEEDS NATIVE REVIEW
+  "settings.from": "முதல்", // NEEDS NATIVE REVIEW
+  "settings.to": "வரை", // NEEDS NATIVE REVIEW
+  "settings.toOptional": "வரை (விருப்பத்தேர்வு, பல நாட்களுக்கு)", // NEEDS NATIVE REVIEW
+  "settings.daysOff": "விடுமுறை நாட்கள்", // NEEDS NATIVE REVIEW
+  "settings.addDayOff": "மூடல் எனக் குறி", // NEEDS NATIVE REVIEW
+  "settings.noDaysOff": "விடுமுறை நாட்கள் இல்லை", // NEEDS NATIVE REVIEW
+  "settings.remove": "நீக்கு", // NEEDS NATIVE REVIEW
+  "settings.appLang": "செயலி மொழி", // NEEDS NATIVE REVIEW
+  "settings.patientLang": "நோயாளிகளுக்கான வழக்கமான நினைவூட்டல் மொழி", // NEEDS NATIVE REVIEW
+  "settings.whatsapp": "WhatsApp", // NEEDS NATIVE REVIEW
+  "settings.waConnected": "மாதிரி எண்ணுடன் இணைக்கப்பட்டுள்ளது", // NEEDS NATIVE REVIEW
+  "settings.waSub": "மாதிரி மட்டுமே. செய்திகள் அனுப்பப்படாது.", // NEEDS NATIVE REVIEW
+  "settings.staffName": "பணியாளர் பெயர்", // NEEDS NATIVE REVIEW
+  "settings.sendInvite": "அழைப்பைச் சேமி", // NEEDS NATIVE REVIEW
+  "settings.inviteSaved": "அழைப்பு சேமிக்கப்பட்டது (மாதிரி)", // NEEDS NATIVE REVIEW
+  "settings.invalidStaff": "பெயரையும் சரியான 10 இலக்க மொபைல் எண்ணையும் உள்ளிடவும்.", // NEEDS NATIVE REVIEW
+  "weekday.0": "ஞாயிறு", // NEEDS NATIVE REVIEW
+  "weekday.1": "திங்கள்", // NEEDS NATIVE REVIEW
+  "weekday.2": "செவ்வாய்", // NEEDS NATIVE REVIEW
+  "weekday.3": "புதன்", // NEEDS NATIVE REVIEW
+  "weekday.4": "வியாழன்", // NEEDS NATIVE REVIEW
+  "weekday.5": "வெள்ளி", // NEEDS NATIVE REVIEW
+  "weekday.6": "சனி", // NEEDS NATIVE REVIEW
+  "reminders.offset24h": "24 மணி நேரத்திற்கு முன்", // NEEDS NATIVE REVIEW
+  "reminders.offset2h": "2 மணி நேரத்திற்கு முன்", // NEEDS NATIVE REVIEW
+  "reminders.scheduledFor": "{date}, {time} மணிக்கு அனுப்பப்படும்", // NEEDS NATIVE REVIEW
+  "reminders.sentAt": "{date}, {time} மணிக்கு அனுப்பப்பட்டது", // NEEDS NATIVE REVIEW
+  "reminders.sender": "{name} கிளினிக்", // NEEDS NATIVE REVIEW
+  "reminders.replyHint": "நோயாளி பார்க்கும் பதில் பொத்தான்கள்", // NEEDS NATIVE REVIEW
+  "reminders.replyConfirm": "உறுதிசெய்", // NEEDS NATIVE REVIEW
+  "reminders.replyReschedule": "நேரம் மாற்று", // NEEDS NATIVE REVIEW
+  "reminders.replyCancel": "ரத்து செய்", // NEEDS NATIVE REVIEW
+  "reminders.reschedule_requested": "நேரம் மாற்ற விரும்புகிறார்", // NEEDS NATIVE REVIEW
+  "reminders.cancel_requested": "ரத்து செய்ய விரும்புகிறார்", // NEEDS NATIVE REVIEW
+  "reminders.pick": "நினைவூட்டல்", // NEEDS NATIVE REVIEW
+  "reminders.simConfirm": "நோயாளி உறுதிசெய்கிறார்", // NEEDS NATIVE REVIEW
+  "reminders.simReschedule": "நோயாளி நேரம் மாற்றக் கேட்கிறார்", // NEEDS NATIVE REVIEW
+  "reminders.simCancel": "நோயாளி ரத்து செய்கிறார்", // NEEDS NATIVE REVIEW
+  "reminders.visit": "வருகை", // NEEDS NATIVE REVIEW
 };

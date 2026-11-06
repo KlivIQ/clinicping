@@ -132,3 +132,10 @@ export function useI18n() {
   return c;
 }
 export type I18nKey = Key;
+
+/** Translate in a fixed language (e.g. a patient's message preview), independent of the UI language. */
+export function translate(lang: Lang, k: Key, vars?: Record<string, string>) {
+  let s = (lang === "ta" ? ta : en)[k] ?? k;
+  if (vars) for (const [a, b] of Object.entries(vars)) s = s.replace(`{${a}}`, b);
+  return s;
+}
