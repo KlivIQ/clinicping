@@ -4,7 +4,7 @@
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarClock, PhoneCall, MessageSquareText } from "lucide-react";
-import { Logo, LogoMark } from "@/components/brand/Logo";
+import { Endorsement, Logo, LogoMark } from "@/components/brand/Logo";
 import { Credit, LangToggle } from "@/components/LangToggle";
 import { useI18n } from "@/lib/i18n";
 import { DEMO_OTP, DEMO_PHONE } from "@/lib/mock-data";
@@ -52,7 +52,11 @@ function Landing() {
           <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
             <div className="max-w-lg">
               <p className="text-sm font-medium text-muted-foreground">{t("landing.intro")}</p>
-              <h1 className="mt-3 text-5xl font-semibold leading-tight sm:text-6xl">ClinicPing</h1>
+              <h1 className="mt-3 text-5xl font-semibold leading-none sm:text-6xl">
+                ClinicPing
+                <span className="sm:hidden"><Endorsement wordmarkPx={48} /></span>
+                <span className="hidden sm:block"><Endorsement wordmarkPx={60} /></span>
+              </h1>
               <p className="mt-4 max-w-sm font-display text-2xl font-medium leading-snug sm:text-3xl">{t("landing.headline")}</p>
               <p className="mt-4 max-w-sm text-base leading-relaxed text-muted-foreground">{t("landing.simpleSub")}</p>
               <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
