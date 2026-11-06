@@ -16,7 +16,7 @@ import { addReminder, applyDelay, beginConsultation, localDate, updateStatus } f
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_clinic/today")({
-  validateSearch: (s: Record<string, unknown>): { added?: string } => (typeof s.added === "string" ? { added: s.added } : {}),
+  validateSearch: (s: Record<string, unknown>): { added?: string } => (typeof s['added'] === "string" ? { added: s['added'] } : {}),
   head: () => ({
     meta: [
       { title: "Today — ClinicPing" },

@@ -16,8 +16,8 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_clinic/add")({
   validateSearch: (s: Record<string, unknown>): { date?: string; time?: string } => ({
-    ...(typeof s.date === "string" ? { date: s.date } : {}),
-    ...(typeof s.time === "string" ? { time: s.time } : {}),
+    ...(typeof s['date'] === "string" ? { date: s['date'] } : {}),
+    ...(typeof s['time'] === "string" ? { time: s['time'] } : {}),
   }),
   head: () => ({
     meta: [
@@ -91,7 +91,8 @@ function Add() {
     const next = addAppointment(state, n);
     const newId = next.appointments[next.appointments.length - 1]!.id;
     setState(next);
-    nav({ to: date === todayKey ? "/today" : "/calendar", search: date === todayKey ? { added: newId } : undefined });
+    if (date === todayKey) nav({ to: "/today", search: { added: newId } });
+    else nav({ to: "/calendar" });
   };
 
   return (
