@@ -4,7 +4,7 @@
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarClock, PhoneCall, MessageSquareText } from "lucide-react";
-import { Endorsement, Logo, LogoMark } from "@/components/brand/Logo";
+import { Logo, Wordmark } from "@/components/brand/Logo";
 import { Credit, LangToggle } from "@/components/LangToggle";
 import { useI18n } from "@/lib/i18n";
 import { DEMO_OTP, DEMO_PHONE } from "@/lib/mock-data";
@@ -37,7 +37,7 @@ function Landing() {
   return (
     <div className="landing-page min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-4 sm:px-8">
-        <span className="min-[400px]:hidden" aria-label="ClinicPing"><LogoMark /></span>
+        <span className="min-[400px]:hidden"><Logo size={26} wordmarkPx={17} /></span>
         <span className="hidden min-[400px]:inline-flex"><Logo /></span>
         <div className="flex shrink-0 items-center gap-1.5">
           <LangToggle />
@@ -53,9 +53,7 @@ function Landing() {
             <div className="max-w-lg">
               <p className="text-sm font-medium text-muted-foreground">{t("landing.intro")}</p>
               <h1 className="mt-3 text-5xl font-semibold leading-none sm:text-6xl">
-                ClinicPing
-                <span className="sm:hidden"><Endorsement wordmarkPx={48} /></span>
-                <span className="hidden sm:block"><Endorsement wordmarkPx={60} /></span>
+                <Wordmark />
               </h1>
               <p className="mt-4 max-w-sm font-display text-2xl font-medium leading-snug sm:text-3xl">{t("landing.headline")}</p>
               <p className="mt-4 max-w-sm text-base leading-relaxed text-muted-foreground">{t("landing.simpleSub")}</p>

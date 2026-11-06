@@ -63,7 +63,7 @@ function Login() {
       <main className="flex-1 pt-6">
         {step === "phone" && (
           <form onSubmit={(e) => { e.preventDefault(); if (isValidPhone(digits)) setStep("otp"); }} className="space-y-6">
-            <Logo />
+            <div className="flex justify-center"><Logo size={48} wordmarkPx={34} /></div>
             <div>
               <h1 className="text-3xl font-semibold">{t("login.title")}</h1>
               <p className="mt-2 text-muted-foreground">{t("login.sub")}</p>
